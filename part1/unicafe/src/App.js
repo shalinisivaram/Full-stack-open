@@ -4,7 +4,7 @@ import './App.css';
 const Button = (props) => <button onClick = {props.handleClick}>{props.text}</button>
 
 const Display = (props) => {
-  if(props.all.length === 0){
+  if(props.all === 0){
     return(
     <p>No Feedback Given</p>
   )}
