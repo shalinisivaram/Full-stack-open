@@ -12,9 +12,9 @@ const Weather = ({country})=>{
      return(
          <div>
              <h2> Weather in {country.name}</h2>
-             <p> Temperature:{weather.temperature} celcius</p>
+             <p><h3> Temperature:</h3>{weather.temperature} celcius</p>
              <img src={weather.weather_icons} width="100" alt="icon"/>
-             <p><h3>Wind</h3> {weather.wind_speed} mph direction {weather.wind_dir}</p>
+             <p><h3>Wind:</h3>{weather.wind_speed} mph direction {weather.wind_dir}</p>
          </div>
      )
  }
