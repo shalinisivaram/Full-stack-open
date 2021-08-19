@@ -5,13 +5,17 @@ import Name from './components/name';
 import Filter from './components/filter';
 import AddForm from './components/addform';
 import nameService from './services/communication';
-//import { names } from 'debug';
+import './index.css'
+import Notification from './components/notification';
+import Error from './components/error';
 
 const App = () => {
   const [persons,setPersons] = useState([]);
   const [newName,setNewName] =useState('');
   const [newNumber,setNewNumber] =useState('');
   const [search,setSearch] =useState('');
+  const [message,setMessage] = useState(null);
+  const [error,setError] = useState(null)
 
   useEffect(() => {
     nameService
@@ -32,24 +36,39 @@ const App = () => {
         const id = match.id
         nameService.update(id,updatePerson)
         .then((returnedData) =>{
-        console.log(`${returnedData.name} is updated`)
         setPersons(persons.map(person => person.id !== id? person: returnedData))
         setNewName('')
         setNewNumber('')
+        setMessage(`${returnedData.name} number is updated`)
+        setTimeout(() =>{
+        setMessage(null)
+      },5000)
       })
-    } }
-
-    const nameObject = {
-      name:newName,
-      number:newNumber
+      .catch(error => {
+      setPersons(persons.filter((p)=>p.name !== match.name))
+      setError(`Information of ${match.name} is already removed from the server`)
+      setTimeout(() => setError(null),5000)
+    })
+    } } else{
+        const nameObject = {
+        name:newName,
+        number:newNumber
+      }
+        nameService.create(nameObject)
+        .then(returnedData => {
+        setPersons(persons.concat(returnedData))
+        setNewName('')
+        setNewNumber('')
+        setMessage(`${returnedData.name} is added to phonebook`)
+        setTimeout(() =>{
+        setMessage(null)
+      },5000)
+      })    
+      }
     }
-    nameService.create(nameObject)
-    .then(returnedData => {
-      setPersons(persons.concat(returnedData))
-      setNewName('')
-      setNewNumber('')
-    })    
-  }
+    
+
+    
 
   const addNewName = (event) => {
     console.log(event.target.value)
@@ -79,6 +98,8 @@ const App = () => {
       <h1>Phonebook</h1>
       <Filter setSearch={setSearch}/>
       <AddForm onSubmit={addPerson} newName={newName} addNewName={addNewName} newNumber={newNumber} addNewNumber={addNewNumber}/>
+      <Notification message={message}/>
+      <Error error = {error}/>
       <h2> Numbers </h2>
       {nameToShow.map ((person) => <Name key={person.name} person={person} deleteContact={deleteContact}/>)}
     </div>
