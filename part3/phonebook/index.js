@@ -1,8 +1,22 @@
 const http = require('http')
 const express = require('express')
+const { response } = require('express')
+const morgan = require('morgan')
 const app = express()
-
 app.use(express.json())
+
+const requestLogger = morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms',
+      JSON.stringify(req.body)
+    ].join(' ')
+  })
+app.use(requestLogger)
+
 let persons = [
     { 
       "id": 1,
@@ -88,6 +102,13 @@ app.post("/api/persons",(request,response) =>{
     response.json(newPerson)
 })  
 
+const unknownEndpoint = (request,response) => {
+    response.status(404).send({
+        Error:'unknown endpoint'
+    })
+}
+
+app.use(unknownEndpoint)
 
 const PORT = 3000
 app.listen(PORT)
