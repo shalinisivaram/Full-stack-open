@@ -1,3 +1,4 @@
+require('dotenv').config()
 const http = require('http')
 const express = require('express')
 const { response } = require('express')
@@ -8,6 +9,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use(express.static('build'))
+const Person = require('./models/contact')
 
 const requestLogger = morgan(function (tokens, req, res) {
     return [
@@ -21,34 +23,13 @@ const requestLogger = morgan(function (tokens, req, res) {
   })
 app.use(requestLogger)
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get("/api/persons",(request,response) => {
-    response.json(persons)
+    Person.find({}).then(people => {
+        response.json(people)
+    })
 })
 
-const totalPerson =persons.length
+const totalPerson =Person.length
 const d = new Date()
 app.get("/info",(request,response) =>{
     response.send(`Phonebook has info for ${totalPerson} people 
@@ -89,21 +70,14 @@ app.post("/api/persons",(request,response) =>{
     })
 }
     
-    const newPerson = {
+    const newPerson = new Person({
         id:generateId,
         name:body.name,
         number:body.number,
-    } 
-    const match = persons.find
-    (p => p.name.toLowerCase() === newPerson.name.toLowerCase())
-    
-    if(match){
-        return response.status(400).json({
-            Error:"Person name already exist"
-        })
-    }
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
+    })
+    newPerson.save().then(savedContact => {
+        response.json(savedContact)
+    })
 })  
 
 const unknownEndpoint = (request,response) => {
@@ -114,7 +88,7 @@ const unknownEndpoint = (request,response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT 
 app.listen(PORT,() => {
   console.log(`server running in the port ${PORT}`)
 })
