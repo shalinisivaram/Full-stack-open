@@ -49,7 +49,8 @@ const App = () => {
       setError(`Information of ${match.name} is already removed from the server`)
       setTimeout(() => setError(null),5000)
     })
-    } } else{
+    } 
+  } else{
         const nameObject = {
         name:newName,
         number:newNumber
