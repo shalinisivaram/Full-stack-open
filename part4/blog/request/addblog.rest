@@ -2,8 +2,6 @@ POST http://localhost:3002/api/blogs
 Content-Type:application/json
 
 {
-    "title":"article about js",
     "author":"sivaram",
-    "url":"https://bloggingfordevs.com/javascript-blogs/",
     "likes":10
 }
