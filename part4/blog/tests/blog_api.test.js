@@ -7,7 +7,7 @@ const api = supertest(app)
 
 
 beforeEach(async() => {
-    await Blog.deleteMany({})
+ await Blog.deleteMany({})
 
     let blogObject = new Blog(helper.intialBlogs[0])
     await blogObject.save()
@@ -15,6 +15,7 @@ beforeEach(async() => {
     blogObject = new Blog(helper.intialBlogs[1])
     await blogObject.save()
 })
+jest.setTimeout(10000000)
 
 test('blogs are returned as json',async() => {
     await api

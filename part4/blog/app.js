@@ -8,8 +8,8 @@ const app = express()
 const blogRouter = require('./controllers/blogs')
 const cors = require('cors')
 const middleWare = require('./utils/middleware')
-
-
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 logger.info("Connecting to",config.MONGODB_URI)
 
 mongoose.connect(config.MONGODB_URI, {})
@@ -24,8 +24,14 @@ mongoose.connect(config.MONGODB_URI, {})
 app.use(cors())
 app.use(express.json())
 app.use(middleWare.requestLogger)
+app.use('/api/users',usersRouter)
+app.use('/api/login',loginRouter)
+app.use(middleWare.tokenExtracter)
+app.use(middleWare.tokenValidator)
+app.use(middleWare.userExtracter)
 app.use('/api/blogs',blogRouter)
 app.use(middleWare.unKnownEndpoint)
 app.use(middleWare.errorHandler)
+
 
 module.exports = app

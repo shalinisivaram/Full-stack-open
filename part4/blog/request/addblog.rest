@@ -1,7 +1,10 @@
 POST http://localhost:3002/api/blogs
 Content-Type:application/json
+Authorization:bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxvZ2VzaCIsImlkIjoiNjEzZGQzZWNhMzQwZTQxZmY1YTNhZjJhIiwiaWF0IjoxNjMxNDU5OTc2fQ.DtJLoSvIDIPn8xxr9XWBvvrfqxWb0MvmK4ZVpumcyqQ
 
 {
-    "author":"sivaram",
-    "likes":10
+    "title":"middleware user request",
+    "author":"siva",
+    "url":"www.google.com",
+    "likes":8
 }
