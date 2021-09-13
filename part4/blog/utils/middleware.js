@@ -37,15 +37,6 @@ const tokenExtracter = (request,response,next) => {
     next()
   }
 
-const tokenValidator = (request,response,next) => {
-  const token = request.token
-  const decodedToken =jwt.verify(token,process.env.SECRET)
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-  next()
-}
-
 const userExtracter = (request,response,next) => {
   const token = request.token
   const decodedToken = jwt.verify(token,process.env.SECRET)
@@ -59,6 +50,6 @@ const userExtracter = (request,response,next) => {
 
 
 module.exports = {
-    requestLogger,unKnownEndpoint,errorHandler,tokenExtracter,tokenValidator,
+    requestLogger,unKnownEndpoint,errorHandler,tokenExtracter,
     userExtracter
 }
