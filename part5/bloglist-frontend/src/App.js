@@ -4,13 +4,12 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/notification'
 import Error from './components/error'
+import BlogForm from './components/blogForm'
+import Togglable from './components/togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [title,setTitle] = useState('')
-  const [author,setAuthor]= useState('')
   const [message,setMessage] = useState(null)
-  const [url,setUrl]=useState('')
   const [errormessage,setErrormessage] = useState(null)
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
@@ -31,14 +30,10 @@ const App = () => {
     </form> 
   )
   
-
   const blogForm = () => (
-    <form onSubmit = {addBlog}>
-     Title: <input value={title} name="title" onChange={({target})=> setTitle(target.value)}/> <br/> <br/> 
-     Author: <input value={author} name="author" onChange={({target})=> setAuthor(target.value)}/> <br/> <br/> 
-     Url: <input value={url} name="url" onChange={({target})=> setUrl(target.value)}/><br/> <br/> 
-     <button type="submit">Add Blog</button>
-    </form>
+    <Togglable buttonLabel='create a blog'>
+       <BlogForm createBlog={addBlog}/>
+    </Togglable> 
   )
 
   const handleLogin = async (event) =>{
@@ -58,17 +53,7 @@ const App = () => {
     }
   }
 
-  const addBlog = async(event) => {
-    event.preventDefault()
-    const blogObject = {
-      title:title,
-      author:author,
-      url:url
-    }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
+  const addBlog = async (blogObject) => {  
     try{
       const createdBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(createdBlog))
@@ -84,6 +69,40 @@ const App = () => {
     }
   }
 
+  const updateBlog = async(blogToUpdate) => {
+    try{
+      const updatedBlog = await blogService.update(blogToUpdate)
+      setMessage(`${blogToUpdate.title} is updated successfully`)
+      setBlogs(blogs.map(blog => blog.id !== blogToUpdate.id?blog:updatedBlog))
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+    }catch(exception){
+      setErrormessage(`cannot update ${blogToUpdate.title}`)
+      setTimeout(()=>{
+        setErrormessage(null)
+      },5000)
+    }
+  }
+
+const deleteBlog = async(blogToDelete) => {
+  try{
+    if(window.confirm(` are you sure want to delete ${blogToDelete.title}`)){
+      blogService.remove(blogToDelete.id)
+      setBlogs(blogs.filter(blog=>blog.id !== blogToDelete.id))
+      setMessage(`${blogToDelete.title} is deleted successfully`)
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+    }
+  }catch(exception){
+    setErrormessage(`${blogToDelete.title} is not deleted`)
+    setTimeout(()=>{
+      setErrormessage(null)
+    },5000)
+  }
+}
+
   const handleLogout = async(event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')
@@ -92,7 +111,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a,b) => b.likes - a.likes))
     )  
   }, [])
 
@@ -112,7 +131,8 @@ const App = () => {
       <button type='submit' onClick={handleLogout}>LogOut</button> <br />
       {blogForm()}
       {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} updateblog={updateBlog} deleteblog={deleteBlog}
+        user={user}/>
       )}
     </div>
   )
