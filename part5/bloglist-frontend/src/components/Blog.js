@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog,updateblog,deleteblog,user}) => {
+const Blog = ({ blog,updateblog,deleteblog,blogUser }) => {
   const[blogObject,setBlogObject] = useState(blog)
   const [Visible,setVisible]= useState(false)
-  const blogDetailsVisible = {display:Visible?'':'none'}
+  const blogDetailsVisible = { display:Visible?'':'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -31,21 +31,22 @@ const Blog = ({blog,updateblog,deleteblog,user}) => {
   }
   const buttonLabel = Visible?'hide':'show'
 
+  console.log('bloguser',blog.user)
   return(
     <div style={blogStyle}>
-    <div>
-      {blog.title} {blog.author} <button onClick={toggleVisibility}>{buttonLabel}</button>
-    </div>  
-    <div style={blogDetailsVisible}>
-      {blog.url} <br/>
+      <div>
+        {blog.title} {blog.author} <button onClick={toggleVisibility}>{buttonLabel}</button>
+      </div>
+      <div style={blogDetailsVisible}>
+        {blog.url} <br/>
        Likes: {blogObject.likes} <button onClick={increaseLikes}>like</button>
-    </div>  
-    <div>
-    {user.username === blog.user.username && (
-    <button onClick={removeBlog}>Remove</button>)}
+      </div>
+      <div>
+        {blogUser === blog.user.username && (<button onClick={removeBlog}>Remove</button>)}
+
+      </div>
+
     </div>
-   
-    </div>  
   )
 }
 
