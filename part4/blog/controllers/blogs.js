@@ -32,11 +32,10 @@ blogRouter.post('/', userExtracter,async(request, response, next) => {
     response.json(savedBlog)
   })
 
-blogRouter.delete('/:id',userExtracter,async(request,response) => {
+blogRouter.delete('/:id',async(request,response) => {
   const token = request.token
   const decodedToken = jwt.verify(token,process.env.SECRET)
   const user = await User.findById(decodedToken.id)
-
   const blog = await Blog.findById(request.params.id)
   
   if(blog.user._id.toString() === user._id.toString()){
