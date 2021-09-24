@@ -34,15 +34,17 @@ const Blog = ({ blog,updateblog,deleteblog,blogUser }) => {
   console.log('bloguser',blog.user)
   return(
     <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>{buttonLabel}</button>
+      <div className="blogList">
+        {blog.title} -{blog.author} <button id="fullBlog" onClick={toggleVisibility}>{buttonLabel}</button>
       </div>
-      <div style={blogDetailsVisible}>
+      <div style={blogDetailsVisible} className={'blogDetails'}>
         {blog.url} <br/>
-       Likes: {blogObject.likes} <button onClick={increaseLikes}>like</button>
+        <div id="like">
+        Likes: {blogObject.likes} <button id="likes" onClick={increaseLikes}>like</button>
+        </div>
       </div>
       <div>
-        {blogUser === blog.user.username && (<button onClick={removeBlog}>Remove</button>)}
+        {blogUser === blog.user.username && (<button id="remove-button" onClick={removeBlog}>Remove</button>)}
 
       </div>
 

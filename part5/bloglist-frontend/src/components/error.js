@@ -12,7 +12,7 @@ const Error = ({ error }) => {
     return null
   }
   return(
-    <div style={errorStyle}>
+    <div style={errorStyle} className="error">
       {error}
     </div>
 

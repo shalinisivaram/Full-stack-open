@@ -18,15 +18,15 @@ const App = () => {
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        username <input type="text" value={username} name="username"
+        username <input type="text" value={username} id="username"
           onChange={({ target }) => setUsername(target.value)}/>
       </div>
       <br />
       <div>
-        password <input type="password" value={password} name="password"
+        password <input type="password" value={password} id="password"
           onChange={({ target }) => setPassword(target.value)}/>
       </div>
-      <button type="submit">Login</button>
+      <button id="login-button" type="submit">Login</button>
     </form>
   )
 
@@ -41,11 +41,12 @@ const App = () => {
     try{
       const user = await loginService.login({ username,password })
       window.localStorage.setItem('loggedUser',JSON.stringify(user))
-      setUser(user)
       blogService.setToken(user.token)
+      setUser(user)
       setUsername('')
       setPassword('')
-    } catch(exception){
+    }
+    catch(exception){
       setErrormessage('wrong credentials')
       setTimeout(() => {
         setErrormessage(null)
@@ -128,6 +129,7 @@ const App = () => {
     return(
       <div>
         <h2>login to the application</h2>
+        <Error error={errormessage}/>
         {loginForm()}</div>
     )
   }
@@ -137,7 +139,7 @@ const App = () => {
       <Notification message = {message}/>
       <Error error={errormessage}/>
       <h3> {user.username} logged-in </h3>
-      <button type='submit' onClick={handleLogout}>LogOut</button> <br />
+      <button id="logOut" type='submit' onClick={handleLogout}>LogOut</button> <br />
       {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateblog={updateBlog} deleteblog={deleteBlog}
