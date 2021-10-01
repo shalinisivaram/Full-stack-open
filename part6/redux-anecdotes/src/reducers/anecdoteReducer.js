@@ -19,16 +19,16 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {  
+const anecodeReducer = (state = initialState, action) => {  
   switch(action.type){
     case 'NEW_ANECODE':
-      return state.concat(action.data)
+      return [...state,action.data]
     case 'ADD_VOTE':
       const id = action.data.id
       const codeToChange = state.find(a => a.id === id)
       const changedCode = {
         ...codeToChange,
-        votes: codeToChange.votes + 1
+        votes: codeToChange.votes + 1,
       }
       return state.map(anecode => anecode.id !== id ? anecode : changedCode)
   default: 
@@ -55,4 +55,4 @@ export const Vote = (id)=>{
 }
 
 
-export default reducer
+export default anecodeReducer

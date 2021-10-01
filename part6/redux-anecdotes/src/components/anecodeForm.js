@@ -1,5 +1,6 @@
 import { createAnecode } from "../reducers/anecdoteReducer"
 import { useDispatch } from "react-redux"
+import { setNotification } from "../reducers/notificationReducer"
 
 const AnecodeForm =() => {
     const dispatch = useDispatch()
@@ -9,6 +10,10 @@ const AnecodeForm =() => {
         const newAnecode = event.target.anecode.value
         event.target.anecode.value = ''
         dispatch(createAnecode(newAnecode))
+        dispatch(setNotification(`Anecode ${newAnecode} is added successfully`))
+        setTimeout(() => {
+            dispatch(setNotification(null))
+        },2000)
       }
     return(
         <div>
