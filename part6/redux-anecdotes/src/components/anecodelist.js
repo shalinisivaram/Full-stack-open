@@ -6,11 +6,8 @@ import { Vote } from '../reducers/anecdoteReducer'
 const Anecode = ({anecdote}) => {
     const dispatch = useDispatch()
     const voteHandler = () => {
-        dispatch(Vote(anecdote.id))
-        dispatch(setNotification(`you voted for ${anecdote.content}`))
-        setTimeout(() => {
-            dispatch(setNotification(null))
-        },2000)
+        dispatch(Vote(anecdote))
+        dispatch(setNotification(`you voted for ${anecdote.content}`),2)
     }
     
     return (
