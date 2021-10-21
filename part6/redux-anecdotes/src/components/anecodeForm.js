@@ -1,20 +1,17 @@
 import { createAnecode } from "../reducers/anecdoteReducer"
-import { useDispatch } from "react-redux"
+//import { useDispatch } from "react-redux"
 import { setNotification } from "../reducers/notificationReducer"
-import anecdoteService from "../services/anecdotes"
+import { connect } from "react-redux"
 
-const AnecodeForm =() => {
-    const dispatch = useDispatch()
+const AnecodeForm =(props) => {
+    //const dispatch = useDispatch()
 
     const addAnecode = async(event) => {
         event.preventDefault()
         const content = event.target.anecode.value
         event.target.anecode.value = ''
-        dispatch(createAnecode(content))
-        dispatch(setNotification(`Anecode ${content} is added successfully`))
-        setTimeout(() => {
-            dispatch(setNotification(null))
-        },2000)
+        props.createAnecode(content)
+        props.setNotification(`Anecode ${content} is added successfully`,5)
       }
     return(
         <div>
@@ -27,5 +24,9 @@ const AnecodeForm =() => {
         
     )
 }
+const mapDispatchToProps = {
+    createAnecode,
+    setNotification
+  }
 
-export default AnecodeForm
+export default connect (null,mapDispatchToProps) (AnecodeForm)
